@@ -1,0 +1,59 @@
+﻿Phase 1 model summary
+This document is meant to be a summary of the models used on the Phase 1 data.
+Provide the following details for EACH sub-challenge within “Summary-Phase1.txt”
+------------------------------
+Summary-Phase1-Sub-challenge-1
+------------------------------
+a) Provide a description of model settings and parameters, and details of model building including dataset(s) description(s) used for training, cross validation and testing (number of samples, number of features, etc.) 
+
+b) Short listed features selected by the model
+
+c) Link to complete code in a public GitHub repository 
+
+d) Confusion matrix indicating number of predictions, true positives, false positives, true negatives, and false negatives 
+
+e) Overall accuracy 
+
+f) Specificity
+
+g) Sensitivity 
+
+h) Area under the curve (AUC)
+
+------------------------------
+Summary-Phase1-Sub-challenge-2
+------------------------------
+a) Provide a description of model settings and parameters, and details of model building including dataset(s) description(s) used for training, cross validation and testing (number of samples, number of features, etc.) 
+
+b) Short listed features selected by the model
+
+c) Link to complete code in a public GitHub repository 
+
+d) Confusion matrix indicating number of predictions, true positives, false positives, true negatives, and false negatives 
+
+e) Overall accuracy 
+
+f) Specificity
+
+g) Sensitivity 
+
+h) Area under the curve (AUC)
+
+------------------------------
+Summary-Phase1-Sub-challenge-3
+------------------------------
+a) Provide a description of model settings and parameters, and details of model building including dataset(s) description(s) used for training, cross validation and testing (number of samples, number of features, etc.) 
+
+b) Short listed features selected by the model
+
+c) Link to complete code in a public GitHub repository 
+
+d) Confusion matrix indicating number of predictions, true positives, false positives, true negatives, and false negatives 
+
+e) Overall accuracy 
+
+f) Specificity
+
+g) Sensitivity 
+
+h) Area under the curve (AUC)

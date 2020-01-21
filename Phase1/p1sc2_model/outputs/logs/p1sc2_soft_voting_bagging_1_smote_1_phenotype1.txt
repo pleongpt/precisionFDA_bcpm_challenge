@@ -1,0 +1,137 @@
+/home/pleong/venv/bin/python3 /home/pleong/precisionFDA/brain_cancer_biomarkers_challenge/Phase1/p1sc2_model/p1sc2_model.py -m soft_voting -bagging 1 -smote 1 -phenotype 1
+Python version: 3.6.9
+Scikit-learn version: 0.22.1
+Numpy version: 1.17.2
+Pandas version: 0.25.1
+
+Command: "p1sc2_model.py -m soft_voting -bagging 1 -smote 1 -phenotype 1"
+Execution date/time: 2020-01-21 09:21:43.437632
+
+************************************************************************************
+numpy.random rnd_seed=1234 test_set_ratio=0.20 SMOTE ratio=0.80
+************************************************************************************
+Shape of DNA_CN data: (174, 811), max=5.5962, min=0.0000, NaN=0.00%
+Shape of clinical phenotype data: (174, 4)
+Shape of survival status data: (174, 1)
+
+All PATIENTID entries in data_dna_CN are unique.
+All PATIENTID entries in data_phenotype are unique.
+All PATIENTID entries in data_survival are unique.
+
+PATIENTID entries in data_dna_CN are the same as in data_phenotype.
+PATIENTID entries in data_dna_CN are the same as in data_survival.
+
+--------------------------------------------------------------------------
+Swap the data_survival values so that the minority is 1 and majority is 0.
+Will flip back this logic in actual model prediction.
+--------------------------------------------------------------------------
+
+Split data into training and test sets using StratifiedShuffleSplit. test_set_ratio=0.20
+
+Shape of X_train: (139, 813)
+Shape of y_train: (139, 1)
+
+Shape of X_test: (35, 813)
+Shape of y_test: (35, 1)
+
+Original data_survival label distribution (0:deceased, 1:alive):
+0:131	0.7529%
+1:43	0.2471%
+
+y_train label distribution (0:deceased, 1:alive):
+0 :105	0.7554%
+1 :34	0.2446%
+
+y_test label distribution (0:deceased, 1:alive):
+0:26	0.7429%
+1:9	0.2571%
+
+--------------------------------------------------------------------------
+Apply SMOTENC to synthesize more minority data against majority in training set.
+smote_ratio=0.80
+--------------------------------------------------------------------------
+New shape of X_train: (189, 813)
+New shape of y_train: (189,)
+SMOTEd y_train label distribution (0:deceased, 1:alive):
+0 :105	0.5556%
+1 :84	0.4444%
+
+**************************************************************************
+Logistic Regression with L1 regularization on DNA_CN_data vs survival labels:
+solver = liblinear, C = 50.00, max_ter = 500
+Bagging = True
+**************************************************************************
+
+**************************************************************************
+SVM with linear kernel on DNA_CN_data vs survival labels:
+C = 10.00
+Bagging = True
+**************************************************************************
+
+**************************************************************************
+Random Forest Classifier on DNA_CN_data vs survival labels:
+n_estimators = 1000, class_weight = balanced_subsample
+(No additional bagging on RF since RF itself uses bagging)
+**************************************************************************
+
+**************************************************************************
+XGBoost Classifier on DNA_CN_data vs survival labels:
+(No additional bagging on XGBoost since XGBoost itself uses bagging)
+**************************************************************************
+
+**************************************************************************
+Soft Voting Classifier on DNA_CN_data vs survival labels:
+**************************************************************************
+==============================
+On training set (soft_voting)
+==============================
+Training Set: Bagging OOB score = 1.00
+Training set: Accuracy via cross_val_score(k=5): 0.85 (+/- 0.13)
+
+F1 score via cross_val_score(k=5): 0.82 (+/- 0.19)
+
+Training Set: Accuracy via cross_val_predict(k=5) = 0.85
+Training Set: Balanced Accuracy = 0.85
+Training Set: Cohen's Kappa score = 0.69
+Training Set: Confusion Matrix via cross_val_predict:
+Predicted    0   1  All
+Actual                 
+0           90  15  105
+1           14  70   84
+All        104  85  189
+
+Training Set cross_val_predict: Precision = 0.82
+Training Set cross_val_predict: Recall = 0.83
+Training Set cross_val_predict: F1 = 0.83
+Training Set: cross_val_predict AUC = 0.92
+
+Saving figure soft_voting_ROC_train_data_plot
+Saving figure soft_voting_precision_vs_recall_train_data_plot
+
+==============================
+On test set (soft_voting)
+==============================
+Test Set: Accuracy = 0.77
+Test Set: Balanced Accuracy = 0.63
+Test Set: Cohen's Kappa score = 0.30
+Test Set: Confusion Matrix:
+Predicted   0  1  All
+Actual               
+0          24  2   26
+1           6  3    9
+All        30  5   35
+
+Test Set: Precision = 0.60
+Test Set: Recall = 0.33
+Test Set: F1 = 0.43
+Test Set: AUC = 0.77
+
+Saving figure soft_voting_ROC_test_data_plot
+Saving figure soft_voting_precision_vs_recall_test_data_plot
+
+Save model to file ./data/p1sc2_sv_clf.joblib
+
+Run time was 38.76s.
+
+Process finished with exit code 0
+

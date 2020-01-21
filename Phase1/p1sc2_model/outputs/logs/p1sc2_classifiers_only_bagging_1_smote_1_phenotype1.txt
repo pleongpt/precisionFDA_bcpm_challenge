@@ -1,0 +1,439 @@
+/home/pleong/venv/bin/python3 /home/pleong/precisionFDA/brain_cancer_biomarkers_challenge/Phase1/p1sc2_model/p1sc2_model.py -m classifiers_only -bagging 1 -smote 1 -phenotype 1
+Python version: 3.6.9
+Scikit-learn version: 0.22.1
+Numpy version: 1.17.2
+Pandas version: 0.25.1
+
+Command: "p1sc2_model.py -m classifiers_only -bagging 1 -smote 1 -phenotype 1"
+Execution date/time: 2020-01-21 09:18:46.931807
+
+************************************************************************************
+numpy.random rnd_seed=1234 test_set_ratio=0.20 SMOTE ratio=0.80
+************************************************************************************
+Shape of DNA_CN data: (174, 811), max=5.5962, min=0.0000, NaN=0.00%
+Shape of clinical phenotype data: (174, 4)
+Shape of survival status data: (174, 1)
+
+All PATIENTID entries in data_dna_CN are unique.
+All PATIENTID entries in data_phenotype are unique.
+All PATIENTID entries in data_survival are unique.
+
+PATIENTID entries in data_dna_CN are the same as in data_phenotype.
+PATIENTID entries in data_dna_CN are the same as in data_survival.
+
+--------------------------------------------------------------------------
+Swap the data_survival values so that the minority is 1 and majority is 0.
+Will flip back this logic in actual model prediction.
+--------------------------------------------------------------------------
+
+Split data into training and test sets using StratifiedShuffleSplit. test_set_ratio=0.20
+
+Shape of X_train: (139, 813)
+Shape of y_train: (139, 1)
+
+Shape of X_test: (35, 813)
+Shape of y_test: (35, 1)
+
+Original data_survival label distribution (0:deceased, 1:alive):
+0:131	0.7529%
+1:43	0.2471%
+
+y_train label distribution (0:deceased, 1:alive):
+0 :105	0.7554%
+1 :34	0.2446%
+
+y_test label distribution (0:deceased, 1:alive):
+0:26	0.7429%
+1:9	0.2571%
+
+--------------------------------------------------------------------------
+Apply SMOTENC to synthesize more minority data against majority in training set.
+smote_ratio=0.80
+--------------------------------------------------------------------------
+New shape of X_train: (189, 813)
+New shape of y_train: (189,)
+SMOTEd y_train label distribution (0:deceased, 1:alive):
+0 :105	0.5556%
+1 :84	0.4444%
+
+**************************************************************************
+Logistic Regression with L1 regularization on DNA_CN_data vs survival labels:
+solver = liblinear, C = 50.00, max_ter = 500
+Bagging = True
+**************************************************************************
+==============================
+On training set (log_reg_l1)
+==============================
+Training Set: Bagging OOB score = 0.77
+Training set: Accuracy via cross_val_score(k=5): 0.77 (+/- 0.16)
+
+F1 score via cross_val_score(k=5): 0.77 (+/- 0.20)
+
+Training Set: Accuracy via cross_val_predict(k=5) = 0.78
+Training Set: Balanced Accuracy = 0.78
+Training Set: Cohen's Kappa score = 0.56
+Training Set: Confusion Matrix via cross_val_predict:
+Predicted   0   1  All
+Actual                
+0          77  28  105
+1          14  70   84
+All        91  98  189
+
+Training Set cross_val_predict: Precision = 0.71
+Training Set cross_val_predict: Recall = 0.83
+Training Set cross_val_predict: F1 = 0.77
+Training Set: cross_val_predict AUC = 0.84
+
+Saving figure log_reg_l1_ROC_train_data_plot
+Saving figure log_reg_l1_precision_vs_recall_train_data_plot
+
+==============================
+On test set (log_reg_l1)
+==============================
+Test Set: Accuracy = 0.63
+Test Set: Balanced Accuracy = 0.53
+Test Set: Cohen's Kappa score = 0.06
+Test Set: Confusion Matrix:
+Predicted   0   1  All
+Actual                
+0          19   7   26
+1           6   3    9
+All        25  10   35
+
+Test Set: Precision = 0.30
+Test Set: Recall = 0.33
+Test Set: F1 = 0.32
+Test Set: AUC = 0.67
+
+Saving figure log_reg_l1_ROC_test_data_plot
+Saving figure log_reg_l1_precision_vs_recall_test_data_plot
+
+Save model to file ./data/p1sc2_log_reg_clf.joblib
+
+
+**************************************************************************
+Elastic Net Regression on DNA_CN_data vs survival labels:
+solver = saga, l1_ratio = 0.75, C = 0.05, max_iter = 500
+Bagging = True
+**************************************************************************
+==============================
+On training set (elastic_net)
+==============================
+Training Set: Bagging OOB score = 0.56
+Training set: Accuracy via cross_val_score(k=5): 0.56 (+/- 0.01)
+
+F1 score via cross_val_score(k=5): 0.00 (+/- 0.00)
+
+Training Set: Accuracy via cross_val_predict(k=5) = 0.56
+Training Set: Balanced Accuracy = 0.50
+Training Set: Cohen's Kappa score = 0.00
+Training Set: Confusion Matrix via cross_val_predict:
+Predicted    0  All
+Actual             
+0          105  105
+1           84   84
+All        189  189
+/home/pleong/venv/lib/python3.6/site-packages/sklearn/metrics/_classification.py:1272: UndefinedMetricWarning: Precision is ill-defined and being set to 0.0 due to no predicted samples. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, msg_start, len(result))
+
+Training Set cross_val_predict: Precision = 0.00
+Training Set cross_val_predict: Recall = 0.00
+Training Set cross_val_predict: F1 = 0.00
+Training Set: cross_val_predict AUC = 0.50
+
+Saving figure elastic_net_ROC_train_data_plot
+Saving figure elastic_net_precision_vs_recall_train_data_plot
+
+==============================
+On test set (elastic_net)
+==============================
+Test Set: Accuracy = 0.74
+Test Set: Balanced Accuracy = 0.50
+Test Set: Cohen's Kappa score = 0.00
+Test Set: Confusion Matrix:
+Predicted   0  All
+Actual            
+0          26   26
+1           9    9
+All        35   35
+/home/pleong/venv/lib/python3.6/site-packages/sklearn/metrics/_classification.py:1272: UndefinedMetricWarning: Precision is ill-defined and being set to 0.0 due to no predicted samples. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, msg_start, len(result))
+
+Test Set: Precision = 0.00
+Test Set: Recall = 0.00
+Test Set: F1 = 0.00
+Test Set: AUC = 0.50
+
+Saving figure elastic_net_ROC_test_data_plot
+Saving figure elastic_net_precision_vs_recall_test_data_plot
+
+Save model to file ./data/p1sc2_elastic_clf.joblib
+
+
+**************************************************************************
+SVM with linear kernel on DNA_CN_data vs survival labels:
+C = 10.00
+Bagging = True
+**************************************************************************
+==============================
+On training set (linear_SVM)
+==============================
+Training Set: Bagging OOB score = 0.78
+Training set: Accuracy via cross_val_score(k=5): 0.81 (+/- 0.17)
+
+F1 score via cross_val_score(k=5): 0.80 (+/- 0.17)
+
+Training Set: Accuracy via cross_val_predict(k=5) = 0.81
+Training Set: Balanced Accuracy = 0.82
+Training Set: Cohen's Kappa score = 0.62
+Training Set: Confusion Matrix via cross_val_predict:
+Predicted   0   1  All
+Actual                
+0          80  25  105
+1          11  73   84
+All        91  98  189
+
+Training Set cross_val_predict: Precision = 0.74
+Training Set cross_val_predict: Recall = 0.87
+Training Set cross_val_predict: F1 = 0.80
+Training Set: cross_val_predict AUC = 0.86
+
+Saving figure linear_SVM_ROC_train_data_plot
+Saving figure linear_SVM_precision_vs_recall_train_data_plot
+
+==============================
+On test set (linear_SVM)
+==============================
+Test Set: Accuracy = 0.66
+Test Set: Balanced Accuracy = 0.59
+Test Set: Cohen's Kappa score = 0.16
+Test Set: Confusion Matrix:
+Predicted   0   1  All
+Actual                
+0          19   7   26
+1           5   4    9
+All        24  11   35
+
+Test Set: Precision = 0.36
+Test Set: Recall = 0.44
+Test Set: F1 = 0.40
+Test Set: AUC = 0.77
+
+Saving figure linear_SVM_ROC_test_data_plot
+Saving figure linear_SVM_precision_vs_recall_test_data_plot
+
+Save model to file ./data/p1sc2_linSVM_clf.joblib
+
+
+**************************************************************************
+SVM with Gaussian RBF kernel on DNA_CN_data vs survival labels:
+C = 1.00, gamma = auto
+Bagging = True
+**************************************************************************
+==============================
+On training set (Gaussian_RBF_SVM)
+==============================
+Training Set: Bagging OOB score = 0.79
+Training set: Accuracy via cross_val_score(k=5): 0.78 (+/- 0.15)
+
+F1 score via cross_val_score(k=5): 0.75 (+/- 0.20)
+
+Training Set: Accuracy via cross_val_predict(k=5) = 0.78
+Training Set: Balanced Accuracy = 0.78
+Training Set: Cohen's Kappa score = 0.55
+Training Set: Confusion Matrix via cross_val_predict:
+Predicted    0   1  All
+Actual                 
+0           82  23  105
+1           19  65   84
+All        101  88  189
+
+Training Set cross_val_predict: Precision = 0.74
+Training Set cross_val_predict: Recall = 0.77
+Training Set cross_val_predict: F1 = 0.76
+Training Set: cross_val_predict AUC = 0.86
+
+Saving figure Gaussian_RBF_SVM_ROC_train_data_plot
+Saving figure Gaussian_RBF_SVM_precision_vs_recall_train_data_plot
+
+==============================
+On test set (Gaussian_RBF_SVM)
+==============================
+Test Set: Accuracy = 0.69
+Test Set: Balanced Accuracy = 0.50
+Test Set: Cohen's Kappa score = -0.01
+Test Set: Confusion Matrix:
+Predicted   0  1  All
+Actual               
+0          23  3   26
+1           8  1    9
+All        31  4   35
+
+Test Set: Precision = 0.25
+Test Set: Recall = 0.11
+Test Set: F1 = 0.15
+Test Set: AUC = 0.55
+
+Saving figure Gaussian_RBF_SVM_ROC_test_data_plot
+Saving figure Gaussian_RBF_SVM_precision_vs_recall_test_data_plot
+
+Save model to file ./data/p1sc2_rbfSVM_clf.joblib
+
+
+**************************************************************************
+Random Forest Classifier on DNA_CN_data vs survival labels:
+n_estimators = 1000, class_weight = balanced_subsample
+(No additional bagging on RF since RF itself uses bagging)
+**************************************************************************
+==============================
+On training set (RF)
+==============================
+Training set: Accuracy via cross_val_score(k=5): 0.91 (+/- 0.20)
+
+F1 score via cross_val_score(k=5): 0.88 (+/- 0.29)
+
+Training Set: Accuracy via cross_val_predict(k=5) = 0.91
+Training Set: Balanced Accuracy = 0.90
+Training Set: Cohen's Kappa score = 0.81
+Training Set: Confusion Matrix via cross_val_predict:
+Predicted    0   1  All
+Actual                 
+0          103   2  105
+1           15  69   84
+All        118  71  189
+
+Training Set cross_val_predict: Precision = 0.97
+Training Set cross_val_predict: Recall = 0.82
+Training Set cross_val_predict: F1 = 0.89
+Training Set: cross_val_predict AUC = 0.95
+
+Saving figure RF_ROC_train_data_plot
+Saving figure RF_precision_vs_recall_train_data_plot
+
+==============================
+On test set (RF)
+==============================
+Test Set: Accuracy = 0.71
+Test Set: Balanced Accuracy = 0.52
+Test Set: Cohen's Kappa score = 0.04
+Test Set: Confusion Matrix:
+Predicted   0  1  All
+Actual               
+0          24  2   26
+1           8  1    9
+All        32  3   35
+
+Test Set: Precision = 0.33
+Test Set: Recall = 0.11
+Test Set: F1 = 0.17
+Test Set: AUC = 0.76
+
+Saving figure RF_ROC_test_data_plot
+Saving figure RF_precision_vs_recall_test_data_plot
+
+Classifier RF top 20 important attributes:
+Name            GINI Importance
+11p15.4          0.011819
+12p13.33         0.011157
+16p13.3          0.009671
+10p15.3          0.008728
+10q11.23         0.007566
+2q37.3           0.007330
+12q21.1          0.007101
+7p11.2           0.006449
+6q27             0.006403
+1p35.2           0.006285
+7p12.1           0.006181
+9p21.3           0.006097
+7q36.2           0.005919
+5q21.3           0.005780
+10p12.31         0.005557
+6q22.33          0.005483
+7q36.3           0.005347
+7q36.1           0.005231
+7p15.1           0.005213
+6q25.3           0.005113
+
+Save model to file ./data/p1sc2_rf_clf.joblib
+
+
+**************************************************************************
+XGBoost Classifier on DNA_CN_data vs survival labels:
+(No additional bagging on XGBoost since XGBoost itself uses bagging)
+**************************************************************************
+==============================
+On training set (xgboost)
+==============================
+Training Set: Bagging OOB score = 1.00
+Training set: Accuracy via cross_val_score(k=5): 0.82 (+/- 0.17)
+
+F1 score via cross_val_score(k=5): 0.78 (+/- 0.28)
+
+Training Set: Accuracy via cross_val_predict(k=5) = 0.82
+Training Set: Balanced Accuracy = 0.82
+Training Set: Cohen's Kappa score = 0.64
+Training Set: Confusion Matrix via cross_val_predict:
+Predicted    0   1  All
+Actual                 
+0           88  17  105
+1           17  67   84
+All        105  84  189
+
+Training Set cross_val_predict: Precision = 0.80
+Training Set cross_val_predict: Recall = 0.80
+Training Set cross_val_predict: F1 = 0.80
+Training Set: cross_val_predict AUC = 0.90
+
+Saving figure xgboost_ROC_train_data_plot
+Saving figure xgboost_precision_vs_recall_train_data_plot
+
+==============================
+On test set (xgboost)
+==============================
+Test Set: Accuracy = 0.74
+Test Set: Balanced Accuracy = 0.57
+Test Set: Cohen's Kappa score = 0.18
+Test Set: Confusion Matrix:
+Predicted   0  1  All
+Actual               
+0          24  2   26
+1           7  2    9
+All        31  4   35
+
+Test Set: Precision = 0.50
+Test Set: Recall = 0.22
+Test Set: F1 = 0.31
+Test Set: AUC = 0.78
+
+Saving figure xgboost_ROC_test_data_plot
+Saving figure xgboost_precision_vs_recall_test_data_plot
+
+Classifier xgboost top 20 important attributes:
+11p15.4          0.042169
+12p13.33         0.042169
+6q27             0.038153
+6p21.31          0.034137
+16p13.3          0.030120
+16p11.2          0.026104
+20q11.21         0.026104
+9p21.3           0.020080
+6q22.33          0.018072
+15q15.1          0.016064
+8q24.12          0.016064
+5p15.32          0.014056
+11q12.3          0.014056
+9p24.1           0.014056
+18p11.31         0.012048
+6q25.3           0.012048
+12q21.1          0.012048
+2p25.3           0.012048
+5q35.2           0.012048
+1p35.2           0.012048
+
+
+Save model to file ./data/p1sc2_xgboost_clf.joblib
+
+Run time was 101.06s.
+
+Process finished with exit code 0
+

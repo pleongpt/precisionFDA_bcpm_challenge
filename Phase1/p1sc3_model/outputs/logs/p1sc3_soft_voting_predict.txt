@@ -1,0 +1,48 @@
+/home/pleong/venv/bin/python3 /home/pleong/precisionFDA/brain_cancer_biomarkers_challenge/Phase1/p1sc3_model/p1sc3_model.py -m soft_voting -prefilter 1 -predict -rna_dna_CN_predict ./data/rna_dna_CN_test.tsv -pheno_predict ./data/pheno_test.tsv
+Python version: 3.6.9
+Scikit-learn version: 0.22.1
+Numpy version: 1.17.2
+Pandas version: 0.25.1
+
+Command: "p1sc3_model.py -m soft_voting -prefilter 1 -predict -rna_dna_CN_predict ./data/rna_dna_CN_test.tsv -pheno_predict ./data/pheno_test.tsv"
+Execution date/time: 2020-01-21 09:43:12.880448
+
+             SURVIVAL_STATUS
+PATIENTID                   
+patient_9                  1
+patient_227                1
+patient_472                1
+patient_201                1
+patient_653                1
+patient_330                1
+patient_329                1
+patient_316                1
+patient_523                1
+patient_474                1
+patient_539                1
+patient_282                1
+patient_31                 1
+patient_658                1
+patient_471                1
+patient_177                1
+patient_381                1
+patient_528                1
+patient_159                0
+patient_376                1
+patient_664                1
+patient_80                 1
+patient_461                0
+patient_265                1
+patient_218                1
+patient_165                1
+patient_290                1
+patient_320                0
+patient_117                1
+patient_389                1
+patient_566                1
+patient_671                1
+patient_289                1
+patient_592                1
+
+Process finished with exit code 0
+

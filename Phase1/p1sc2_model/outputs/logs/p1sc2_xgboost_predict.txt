@@ -1,0 +1,49 @@
+/home/pleong/venv/bin/python3 /home/pleong/precisionFDA/brain_cancer_biomarkers_challenge/Phase1/p1sc2_model/p1sc2_model.py -m xgboost -predict -dna_CN_predict ./data/dna_CN_test.tsv -pheno_predict ./data/pheno_test.tsv
+Python version: 3.6.9
+Scikit-learn version: 0.22.1
+Numpy version: 1.17.2
+Pandas version: 0.25.1
+
+Command: "p1sc2_model.py -m xgboost -predict -dna_CN_predict ./data/dna_CN_test.tsv -pheno_predict ./data/pheno_test.tsv"
+Execution date/time: 2020-01-21 09:24:34.517868
+
+             SURVIVAL_STATUS
+PATIENTID                   
+patient_371                1
+patient_583                1
+patient_657                1
+patient_171                1
+patient_468                0
+patient_102                1
+patient_253                1
+patient_174                1
+patient_9                  1
+patient_381                1
+patient_257                1
+patient_629                1
+patient_565                0
+patient_302                1
+patient_6                  1
+patient_420                0
+patient_176                1
+patient_455                1
+patient_183                1
+patient_554                1
+patient_658                1
+patient_329                1
+patient_535                1
+patient_487                1
+patient_478                1
+patient_323                1
+patient_117                1
+patient_162                0
+patient_258                1
+patient_273                1
+patient_438                1
+patient_25                 1
+patient_290                1
+patient_82                 1
+patient_316                1
+
+Process finished with exit code 0
+

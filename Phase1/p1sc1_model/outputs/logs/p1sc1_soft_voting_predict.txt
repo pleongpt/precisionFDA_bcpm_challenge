@@ -1,0 +1,90 @@
+/home/pleong/venv/bin/python3 /home/pleong/precisionFDA/brain_cancer_biomarkers_challenge/Phase1/p1sc1_model/p1sc1_model.py -m soft_voting -predict -rna_predict ./data/rna_test.tsv -pheno_predict ./data/pheno_test.tsv
+Python version: 3.6.9
+Scikit-learn version: 0.22.1
+Numpy version: 1.17.2
+Pandas version: 0.25.1
+
+Command: "p1sc1_model.py -m soft_voting -predict -rna_predict ./data/rna_test.tsv -pheno_predict ./data/pheno_test.tsv"
+Execution date/time: 2020-01-21 08:40:12.228906
+
+             SURVIVAL_STATUS
+PATIENTID                   
+patient_223                1
+patient_389                1
+patient_285                1
+patient_452                1
+patient_600                1
+patient_211                1
+patient_556                1
+patient_19                 1
+patient_180                1
+patient_192                1
+patient_633                1
+patient_246                0
+patient_609                1
+patient_544                1
+patient_393                1
+patient_346                1
+patient_218                1
+patient_321                1
+patient_583                1
+patient_658                1
+patient_463                1
+patient_564                1
+patient_543                1
+patient_513                1
+patient_635                1
+patient_100                1
+patient_10                 1
+patient_471                1
+patient_182                1
+patient_31                 1
+patient_102                1
+patient_21                 1
+patient_501                1
+patient_162                0
+patient_425                1
+patient_546                1
+patient_284                1
+patient_383                1
+patient_371                1
+patient_146                1
+patient_474                1
+patient_214                1
+patient_352                1
+patient_232                1
+patient_304                1
+patient_409                1
+patient_233                1
+patient_61                 1
+patient_41                 1
+patient_349                1
+patient_93                 1
+patient_161                0
+patient_648                1
+patient_444                1
+patient_244                1
+patient_178                1
+patient_228                1
+patient_411                1
+patient_449                1
+patient_84                 1
+patient_239                1
+patient_486                1
+patient_298                1
+patient_336                1
+patient_106                0
+patient_584                1
+patient_460                1
+patient_325                1
+patient_597                1
+patient_33                 1
+patient_187                1
+patient_189                1
+patient_405                1
+patient_22                 1
+patient_296                1
+patient_605                1
+
+Process finished with exit code 0
+
