@@ -1,59 +1,359 @@
 ﻿Phase 1 model summary
 This document is meant to be a summary of the models used on the Phase 1 data.
 Provide the following details for EACH sub-challenge within “Summary-Phase1.txt”
+
+For details about how to reproduce the information below, please see the Readme.txt files under the "data" directory of each respective sub-challenge under the github link.
+
 ------------------------------
 Summary-Phase1-Sub-challenge-1
 ------------------------------
-a) Provide a description of model settings and parameters, and details of model building including dataset(s) description(s) used for training, cross validation and testing (number of samples, number of features, etc.) 
+a) Provide a description of model settings and parameters, and details of model building including dataset(s) description(s) used for training, cross validation and testing (number of samples, number of features, etc.)
+
+File sc1_Phase1_GE_FeatureMatrix.tsv has a shape of  (377, 19335) with no NaN cell.
+File sc1_Phase1_GE_Phenotype.tsv has a shape of (337, 4) with 20.69% NaN cells spread across the SEX, RACE and WHO_GRADING attributes.
+File sc1_Phase1_GE_Outcome.tsv has a shape of (337, 1) with no Nan cell.
+
+The WHO_GRADING and CANCER_TYPE attributes of sc1_Phase1_GE_Phenotype.tsv (the phenotype data) were used in combination with the data from sc1_Phase1_GE_FeatureMatrix.tsv (the RNA data).  We noticed that CANCER_TYPE has no NaN entries, although it has the Unknown and Unclassified entries. The NaN entries in WHO_GRADING were filled in using statistics associated with the CANCER_TYPE.  Specifically, for each cancer type, the frequencies of its WHO_GRADING in the data are counted.  The most frequent WHO_GRADING for that cancer type was used as the filler.  If there are more than one such most frequent WHO gradings, one of them is randomly selected for each fill in.  Therefore the fillna value is not simply based on the mode WHO_GRADING but rather has reference with its associated cancer type.
+
+The WHO_GRADING and CANCER_TYPE columns are concatenated to the RNA data as categorical attributes.  A ColumnTransformer pipeline is used to pre-process this data, with the numerical data columns from RNA going through either normalization or the standard scalar, depending on the specific classifier.  The two categoical attributes from phenotype are converted into one-hot encodings through the transformer.
+
+Since alive (label 0) is the minority set, in order not to inflat the F1 value, we flipped the logic of the labels during classifier training, making alive (label 1) as the minority class.  This logic is reversed back during the prediction phase.
+
+To increase the minority signal, SMOTENC was used to generate additional new minority entries until the minority:majority ratio is 8:10.
+
+The data is separated into test set and training set in the ratio of 2:8 using StratifiedShuffleSplit, preserving the minority sample ratio in both the traning set and the test set.  StratifiedShuffleSplit was set to go through 10 such splittings so as to randomize the order of the samples.  We used the result of the 10th split to form X_train, y_train, X_test, y_test.
+
+A number of classifier algorithms were tested: logistic regression with L1 regularization (log_reg), elastic net, linear SVM (lin_SVM), Gaussian SVM with RBF kernel (rbf_SVM), Random Forest (RF) and XGBoost (xgboost).  For each classifier, its performance with respect to the training set and to the test set was evaluated.  The evaluation with respect to the training set was done with cross-validation.  The performance with respect to the test set was done by making a prediction with X_test and compare y_pred against the y_test (the truth).  Also, soft voting was added as an ensemble referencing the best classifiers: logistic regression, linear SVM, Random Forest and XGBoost.  Where appropriate, bagging was also used to improve the performance of the classifiers.
+
+For the tree-based classifiers RF and XGBoost, we also select the top 20 most important attributes and stored them under the "outputs/topN" directory. The top 20 attributes from xgboost will be later used as a pre-filter to the model in Phase 1 sub-challenge 3.
+
+Each trained classifer model was stored to disk using joblib's dump function. When making a prediction, a model can be reloaded and quickly make a prediction without going through model training again. 
 
 b) Short listed features selected by the model
+Top 20 features based on p1sc1_topN_xgboost.txt and their associated scores:
 
-c) Link to complete code in a public GitHub repository 
+WWC2.AS2	0.035647
+HBB	0.022514
+MMP14	0.018762
+ZNF665	0.016886
+LINC01361	0.016886
+LGR4	0.016886
+DCK	0.013133
+SYCP2	0.011257
+SLF2	0.011257
+APC2	0.011257
+ADGRG6	0.011257
+GMPR2	0.011257
+EPOR	0.009381
+ATG101	0.009381
+CHODL	0.009381
+MATN3	0.009381
+ZPBP2	0.007505
+CUL9	0.007505
+ABHD2	0.007505
+STAG3	0.007505
 
-d) Confusion matrix indicating number of predictions, true positives, false positives, true negatives, and false negatives 
+c) Link to complete code in a public GitHub repository
 
-e) Overall accuracy 
+https://github.com/pleongpt/precisionFDA_bcpm_challenge.git
+ 
 
+d) Confusion matrix indicating number of predictions, true positives, false positives, true negatives, and false negatives
+XGBoost classifier on the test set:
+
+Test Set: Confusion Matrix:
+Predicted   0  1  All
+Actual               
+0          64  2   66
+1           6  4   10
+All        70  6   76
+
+Soft voting on the test set:
+Test Set: Confusion Matrix:
+Predicted   0  1  All
+Actual               
+0          65  1   66
+1           8  2   10
+All        73  3   76
+
+e) Overall accuracy
+XGBoost classifier on test set:
+Test Set: Accuracy = 0.89
+Test Set: Balanced Accuracy = 0.68
+
+Soft voting on the test set:
+est Set: Accuracy = 0.88
+Test Set: Balanced Accuracy = 0.59
+ 
 f) Specificity
+XGBoost classifier on test set:
+Specifiicity = TNR = TN/(TN + FP) = 64/(64 + 2) = 96.97%
 
-g) Sensitivity 
+Soft voting on the test set:
+Specifiicity = TNR = TN/(TN + FP) = 65/(65+1) = 98.48%
+ 
+g) Sensitivity
+XGBoost classifier on test set:
+Sensitivity (Recall) =  TPR = TP/(TP + FN) = 4/(4+6) = 40%
+
+Soft voting on the test set:
+Sensitivity (Recall) =  TPR = TP/(TP + FN) = 2/(2+8) = 20%
 
 h) Area under the curve (AUC)
+XGBoost classifier on test set:
+AUC = 0.70
+
+Soft voting on the test set:
+AUC = 0.63
 
 ------------------------------
 Summary-Phase1-Sub-challenge-2
 ------------------------------
 a) Provide a description of model settings and parameters, and details of model building including dataset(s) description(s) used for training, cross validation and testing (number of samples, number of features, etc.) 
 
+File sc2_Phase1_CN_FeatureMatrix.tsv has a shape of  (174, 811) with no NaN cell.
+File sc2_Phase1_CN_Phenotype.tsv has a shape of (174, 4) with 26.44% NaN cells spread across the SEX, RACE and WHO_GRADING attributes.
+File sc2_Phase1_CN_Outcome.tsv has a shape of (174, 1) with no Nan cell.
+
+The WHO_GRADING and CANCER_TYPE attributes of sc2_Phase1_CN_Phenotype.tsv (the phenotype data) were used in combination with the data from sc2_Phase1_CN_FeatureMatrix.tsv (the DNA CN data).  We noticed that CANCER_TYPE has no NaN entries, although it has the Unknown and Unclassified entries. The NaN entries in WHO_GRADING were filled in using statistics associated with the CANCER_TYPE.  Specifically, for each cancer type, the frequencies of its WHO_GRADING in the data are counted.  The most frequent WHO_GRADING for that cancer type was used as the filler.  If there are more than one such most frequent WHO gradings, one of them is randomly selected for each fill in.  Therefore the fillna value is not simply based on the mode WHO_GRADING but rather has reference with its associated cancer type.
+
+The WHO_GRADING and CANCER_TYPE columns are concatenated to the DNA CN data as categorical attributes.  A ColumnTransformer pipeline is used to pre-process this data, with the numerical data columns from DNA CN going through either normalization or the standard scalar, depending on the specific classifier.  The two categoical attributes from phenotype are converted into one-hot encodings through the transformer.
+
+Since alive (label 0) is the minority set, in order not to inflat the F1 value, we flipped the logic of the labels during classifier training, making alive (label 1) as the minority class.  This logic is reversed back during the prediction phase.
+
+To increase the minority signal, SMOTENC was used to generate additional new minority entries until the minority:majority ratio is 8:10.
+
+The data is separated into test set and training set in the ratio of 2:8 using StratifiedShuffleSplit, preserving the minority sample ratio in both the traning set and the test set.  StratifiedShuffleSplit was set to go through 10 such splittings so as to randomize the order of the samples.  We used the result of the 10th split to form X_train, y_train, X_test, y_test.
+
+A number of classifier algorithms were tested: logistic regression with L1 regularization (log_reg), elastic net, linear SVM (lin_SVM), Gaussian SVM with RBF kernel (rbf_SVM), Random Forest (RF) and XGBoost (xgboost).  For each classifier, its performance with respect to the training set and to the test set was evaluated.  The evaluation with respect to the training set was done with cross-validation.  The performance with respect to the test set was done by making a prediction with X_test and compare y_pred against the y_test (the truth).  Also, soft voting was added as an ensemble referencing the best classifiers: logistic regression, linear SVM, Random Forest and XGBoost.  Where appropriate, bagging was also used to improve the performance of the classifiers.
+
+For the tree-based classifiers RF and XGBoost, we also select the top 20 most important attributes and stored them under the "outputs/topN" directory. The top 20 attributes from xgboost will be later used as a pre-filter to the model in Phase 1 sub-challenge 3.
+
+Each trained classifer model was stored to disk using joblib's dump function. When making a prediction, a model can be reloaded and quickly make a prediction without going through model training again. 
+
+
 b) Short listed features selected by the model
+Top 20 features based on p1sc2_topN_xgboost.txt and their associated scores:
 
-c) Link to complete code in a public GitHub repository 
+11p15.4	0.042169
+12p13.33	0.042169
+6q27	0.038153
+6p21.31	0.034137
+16p13.3	0.030120
+16p11.2	0.026104
+20q11.21	0.026104
+9p21.3	0.020080
+6q22.33	0.018072
+15q15.1	0.016064
+8q24.12	0.016064
+5p15.32	0.014056
+11q12.3	0.014056
+9p24.1	0.014056
+18p11.31	0.012048
+6q25.3	0.012048
+12q21.1	0.012048
+2p25.3	0.012048
+5q35.2	0.012048
+1p35.2	0.012048
 
-d) Confusion matrix indicating number of predictions, true positives, false positives, true negatives, and false negatives 
+c) Link to complete code in a public GitHub repository
+
+https://github.com/pleongpt/precisionFDA_bcpm_challenge.git
+
+
+d) Confusion matrix indicating number of predictions, true positives, false positives, true negatives, and false negatives
+XGBoost classifier on the test set:
+===================================
+
+Test Set: Confusion Matrix:
+Predicted   0  1  All
+Actual               
+0          24  2   26
+1           7  2    9
+All        31  4   35
+
+Soft voting on the test set:
+============================
+
+Test Set: Confusion Matrix:
+Predicted   0  1  All
+Actual               
+0          24  2   26
+1           6  3    9
+All        30  5   35
 
 e) Overall accuracy 
+XGBoost classifier on the test set:
+===================================
+
+Test Set: Accuracy = 0.74
+Test Set: Balanced Accuracy = 0.57
+
+Soft voting on the test set:
+============================
+
+Test Set: Accuracy = 0.77
+Test Set: Balanced Accuracy = 0.63 
+
 
 f) Specificity
+XGBoost classifier on the test set:
+===================================
+
+Specifiicity = TNR = TN/(TN + FP) = 24/(24+2) = 92.31%
+
+Soft voting on the test set:
+============================
+
+Specifiicity = TNR = TN/(TN + FP) = 24/(24+2) = 92.31%
 
 g) Sensitivity 
+XGBoost classifier on the test set:
+===================================
+
+Sensitivity (Recall) =  TPR = TP/(TP + FN) = 2/(2+7) = 22.22%
+
+Soft voting on the test set:
+============================
+
+Sensitivity (Recall) =  TPR = TP/(TP + FN) = 3/(3+6) = 33.33%
+
 
 h) Area under the curve (AUC)
+XGBoost classifier on the test set:
+===================================
+
+AUC = 0.78
+
+Soft voting on the test set:
+============================
+
+AUC = 0.77
+
 
 ------------------------------
 Summary-Phase1-Sub-challenge-3
 ------------------------------
 a) Provide a description of model settings and parameters, and details of model building including dataset(s) description(s) used for training, cross validation and testing (number of samples, number of features, etc.) 
 
+File sc3_Phase1_CN_GE_FeatureMatrix.tsv has a shape of  (166, 20146) with no NaN cell.
+File sc3_Phase1_CN_GE_Phenotype.tsv has a shape of (166, 4) with 26.36% NaN cells spread across the SEX, RACE and WHO_GRADING attributes.
+File sc3_Phase1_CN_GE_Outcome.tsv has a shape of (166, 1) with no Nan cell.
+
+If the boolean preFilter is enabled (default), then the top 20 attributes of xgboost from Phase 1 sub-challenge 1 and Phase 1 sub-challenge 2 are used to select a small subset of attributes in the sc3_Phase1_CN_GE_FeatureMatrix.tsv data (the RNA DNA CN data).  Hence a total of 40 attributes are singled out based on the results of sub-challenges 1 and 2.
+
+The WHO_GRADING and CANCER_TYPE attributes of sc3_Phase1_CN_GE_Phenotype.tsv (the phenotype data) were used in combination with the data from sc3_Phase1_CN_GE_FeatureMatrix.tsv (the RNA DNA CN data).  We noticed that CANCER_TYPE has no NaN entries, although it has the Unknown and Unclassified entries. The NaN entries in WHO_GRADING were filled in using statistics associated with the CANCER_TYPE.  Specifically, for each cancer type, the frequencies of its WHO_GRADING in the data are counted.  The most frequent WHO_GRADING for that cancer type was used as the filler.  If there are more than one such most frequent WHO gradings, one of them is randomly selected for each fill in.  Therefore the fillna value is not simply based on the mode WHO_GRADING but rather has reference with its associated cancer type.
+
+The WHO_GRADING and CANCER_TYPE columns are concatenated to the RNA DNA CN data as categorical attributes.  A ColumnTransformer pipeline is used to pre-process this data, with the numerical data columns from RNA DNA CN going through either normalization or the standard scalar, depending on the specific classifier.  The two categoical attributes from phenotype are converted into one-hot encodings through the transformer.
+
+Since alive (label 0) is the minority set, in order not to inflat the F1 value, we flipped the logic of the labels during classifier training, making alive (label 1) as the minority class.  This logic is reversed back during the prediction phase.
+
+To increase the minority signal, SMOTENC was used to generate additional new minority entries until the minority:majority ratio is 8:10.
+
+The data is separated into test set and training set in the ratio of 2:8 using StratifiedShuffleSplit, preserving the minority sample ratio in both the traning set and the test set.  StratifiedShuffleSplit was set to go through 10 such splittings so as to randomize the order of the samples.  We used the result of the 10th split to form X_train, y_train, X_test, y_test.
+
+A number of classifier algorithms were tested: logistic regression with L1 regularization (log_reg), elastic net, linear SVM (lin_SVM), Gaussian SVM with RBF kernel (rbf_SVM), Random Forest (RF) and XGBoost (xgboost).  For each classifier, its performance with respect to the training set and to the test set was evaluated.  The evaluation with respect to the training set was done with cross-validation.  The performance with respect to the test set was done by making a prediction with X_test and compare y_pred against the y_test (the truth).  Also, soft voting was added as an ensemble referencing the best classifiers: logistic regression, linear SVM, Random Forest and XGBoost.  Where appropriate, bagging was also used to improve the performance of the classifiers.
+
+For the tree-based classifiers RF and XGBoost, we also select the top 20 most important attributes (out of 40 with prefilter enabled) and stored them under the "outputs/topN" directory.
+
+Each trained classifer model was stored to disk using joblib's dump function. When making a prediction, a model can be reloaded and quickly make a prediction without going through model training again. 
+
+
 b) Short listed features selected by the model
+Top 20 features based on p1sc3_topN_xgboost.txt and their associated scores:
 
-c) Link to complete code in a public GitHub repository 
+ATG101	0.102845
+DCK	0.100656
+MATN3	0.091904
+STAG3	0.063457
+LGR4	0.059081
+9p21.3	0.059081
+WWC2.AS2	0.054705
+APC2	0.052516
+SYCP2	0.048140
+CHODL	0.043764
+2p25.3	0.032823
+HBB	0.030635
+EPOR	0.026258
+11p15.4	0.024070
+MMP14	0.021882
+LINC01361	0.019694
+CUL9	0.017505
+ZPBP2	0.017505
+6q22.33	0.015317
+GMPR2	0.015317
 
-d) Confusion matrix indicating number of predictions, true positives, false positives, true negatives, and false negatives 
+c) Link to complete code in a public GitHub repository
 
-e) Overall accuracy 
+https://github.com/pleongpt/precisionFDA_bcpm_challenge.git
+
+
+d) Confusion matrix indicating number of predictions, true positives, false positives, true negatives, and false negatives
+XGBoost classifier on the test set:
+===================================
+
+Test Set: Confusion Matrix:
+Predicted   0  1  All
+Actual               
+0          24  2   26
+1           5  3    8
+All        29  5   34
+
+Soft voting on the test set:
+============================
+
+Test Set: Confusion Matrix:
+Predicted   0  1  All
+Actual               
+0          25  1   26
+1           6  2    8
+All        31  3   34
+
+
+e) Overall accuracy
+XGBoost classifier on the test set:
+===================================
+
+Test Set: Accuracy = 0.79
+Test Set: Balanced Accuracy = 0.65
+
+
+Soft voting on the test set:
+============================
+
+Test Set: Accuracy = 0.79
+Test Set: Balanced Accuracy = 0.61
+
 
 f) Specificity
+XGBoost classifier on the test set:
+===================================
+Specifiicity = TNR = TN/(TN + FP) = 24/(24+2) = 92.31%
+
+
+Soft voting on the test set:
+============================
+Specifiicity = TNR = TN/(TN + FP) = 25/(25+1) = 96.15%
 
 g) Sensitivity 
+XGBoost classifier on the test set:
+===================================
+Sensitivity (Recall) =  TPR = TP/(TP + FN) = 3/(3+5) = 37.50%
+
+
+Soft voting on the test set:
+============================
+Sensitivity (Recall) =  TPR = TP/(TP + FN) = 2/(2+6) = 25.00%
+
 
 h) Area under the curve (AUC)
+XGBoost classifier on the test set:
+===================================
+
+AUC = 0.77
+
+Soft voting on the test set:
+============================
+
+AUC = 0.75
+
