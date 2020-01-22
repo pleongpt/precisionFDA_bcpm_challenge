@@ -11,7 +11,7 @@ a) Provide a description of model settings and parameters, and details of model 
 
 File sc1_Phase1_GE_FeatureMatrix.tsv has a shape of  (377, 19335) with no NaN cell.
 File sc1_Phase1_GE_Phenotype.tsv has a shape of (337, 4) with 20.69% NaN cells spread across the SEX, RACE and WHO_GRADING attributes.
-File sc1_Phase1_GE_Outcome.tsv has a shape of (337, 1) with no Nan cell.
+File sc1_Phase1_GE_Outcome.tsv has a shape of (337, 1) with no NaN cell.
 
 The WHO_GRADING and CANCER_TYPE attributes of sc1_Phase1_GE_Phenotype.tsv (the phenotype data) were used in combination with the data from sc1_Phase1_GE_FeatureMatrix.tsv (the RNA data).  We noticed that CANCER_TYPE has no NaN entries, although it has the Unknown and Unclassified entries. The NaN entries in WHO_GRADING were filled in using statistics associated with the CANCER_TYPE.  Specifically, for each cancer type, the frequencies of its WHO_GRADING in the data are counted.  The most frequent WHO_GRADING for that cancer type was used as the filler.  If there are more than one such most frequent WHO gradings, one of them is randomly selected for each fill in.  Therefore the fillna value is not simply based on the mode WHO_GRADING but rather has reference with its associated cancer type.
 
@@ -113,7 +113,7 @@ a) Provide a description of model settings and parameters, and details of model 
 
 File sc2_Phase1_CN_FeatureMatrix.tsv has a shape of  (174, 811) with no NaN cell.
 File sc2_Phase1_CN_Phenotype.tsv has a shape of (174, 4) with 26.44% NaN cells spread across the SEX, RACE and WHO_GRADING attributes.
-File sc2_Phase1_CN_Outcome.tsv has a shape of (174, 1) with no Nan cell.
+File sc2_Phase1_CN_Outcome.tsv has a shape of (174, 1) with no NaN cell.
 
 The WHO_GRADING and CANCER_TYPE attributes of sc2_Phase1_CN_Phenotype.tsv (the phenotype data) were used in combination with the data from sc2_Phase1_CN_FeatureMatrix.tsv (the DNA CN data).  We noticed that CANCER_TYPE has no NaN entries, although it has the Unknown and Unclassified entries. The NaN entries in WHO_GRADING were filled in using statistics associated with the CANCER_TYPE.  Specifically, for each cancer type, the frequencies of its WHO_GRADING in the data are counted.  The most frequent WHO_GRADING for that cancer type was used as the filler.  If there are more than one such most frequent WHO gradings, one of them is randomly selected for each fill in.  Therefore the fillna value is not simply based on the mode WHO_GRADING but rather has reference with its associated cancer type.
 
@@ -238,7 +238,7 @@ a) Provide a description of model settings and parameters, and details of model 
 
 File sc3_Phase1_CN_GE_FeatureMatrix.tsv has a shape of  (166, 20146) with no NaN cell.
 File sc3_Phase1_CN_GE_Phenotype.tsv has a shape of (166, 4) with 26.36% NaN cells spread across the SEX, RACE and WHO_GRADING attributes.
-File sc3_Phase1_CN_GE_Outcome.tsv has a shape of (166, 1) with no Nan cell.
+File sc3_Phase1_CN_GE_Outcome.tsv has a shape of (166, 1) with no NaN cell.
 
 If the boolean preFilter is enabled (default), then the top 20 attributes of xgboost from Phase 1 sub-challenge 1 and Phase 1 sub-challenge 2 are used to select a small subset of attributes in the sc3_Phase1_CN_GE_FeatureMatrix.tsv data (the RNA DNA CN data).  Hence a total of 40 attributes are singled out based on the results of sub-challenges 1 and 2.
 
