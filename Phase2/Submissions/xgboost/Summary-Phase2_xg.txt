@@ -1,0 +1,32 @@
+Phase 2 model summary
+This document is meant to be a summary of the models used on the Phase 2 data. Provide the following details for EACH sub-challenge within “Summary-Phase2.txt”
+
+------------------------------
+Summary-Phase2-Sub-challenge-1
+------------------------------
+Provide information on model settings and parameters used:
+
+The Phase 2 sub-challenge-1 survival status prediction was made using the XGBoost model generated in Phase 1 sub-challenge 1 and applied to the data sc1_Phase2_GE_FeatureMatrix.tsv and sc1_Phase2_GE_Phenotype.tsv.  No further model training was made when making this prediction.
+
+The command was:
+p1sc1_model.py -m xgboost -predict -rna_predict ./data/sc1_Phase2_GE_FeatureMatrix.tsv -pheno_predict ./data/sc1_Phase2_GE_Phenotype.tsv
+
+------------------------------
+Summary-Phase2-Sub-challenge-2
+------------------------------
+Provide information on model settings and parameters used:
+
+The Phase 2 sub-challenge-2 survival status prediction was made using the XGBoost model generated in Phase 1 sub-challenge 2 and applied to the data sc2_Phase2_CN_FeatureMatrix.tsv and sc2_Phase2_CN_Phenotype.tsv.  No further model training was made when making this prediction.
+
+The command was:
+p1sc2_model.py -m xgboost -predict -dna_CN_predict ./data/sc2_Phase2_CN_FeatureMatrix.tsv -pheno_predict ./data/sc2_Phase2_CN_Phenotype.tsv
+
+------------------------------
+Summary-Phase2-Sub-challenge-3
+------------------------------
+Provide information on model settings and parameters used:
+
+The Phase 2 sub-challenge-3 survival prediction was made by first applying the RNA and DNA CN attribute prefilters to the data sc3_Phase2_CN_GE_FeatureMatrix.tsv to reduce the data dimension, then combined with the Phenotype data sc3_Phase2_CN_GE_FeatureMatrix.tsv and used the XGBoost model generated in Phase 1 sub-challenge 3 to make the prediction. The RNA and DNA CN attribute prefilters were from the Phase 1 Sub-Challenges 1 and 2 XGBoost topN attributes respectively. No further model training was made when making this prediction.
+
+The command was:
+p1sc3_model.py -m xgboost -prefilter 1 -predict -rna_dna_CN_predict ./data/sc3_Phase2_CN_GE_FeatureMatrix.tsv -pheno_predict ./data/sc3_Phase2_CN_GE_Phenotype.tsv
